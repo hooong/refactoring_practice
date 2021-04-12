@@ -23,6 +23,12 @@ def statement(invoice, plays):
             result += a_performance["audience"] // 5
         return result
 
+    def total_volume_credits():
+        volume_credits = 0
+        for perf in invoice["performances"]:
+            volume_credits += volume_credits_for(perf)
+        return volume_credits
+
     def usd(a_number):
         return f'{a_number/100:.2f}'
 
@@ -34,9 +40,7 @@ def statement(invoice, plays):
         result += f' {play_for(perf)["name"]}: ${usd(amount_for(perf))} ({perf["audience"]}석)\n'
         total_amount += amount_for(perf)
 
-    volume_credits = 0
-    for perf in invoice["performances"]:
-        volume_credits += volume_credits_for(perf)
+    volume_credits = total_volume_credits()
 
     result += f'총액: ${usd(total_amount)}\n'
     result += f'적립 포인트: {volume_credits}점'
