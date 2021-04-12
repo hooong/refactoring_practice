@@ -1,4 +1,5 @@
 import copy
+from functools import reduce
 
 
 def statement(invoice, plays):
@@ -34,16 +35,10 @@ def statement(invoice, plays):
         return result
 
     def total_volume_credits(data):
-        result = 0
-        for perf in data["performances"]:
-            result += perf['volumeCredits']
-        return result
+        return reduce(lambda total, p: total + p['volumeCredits'], data['performances'], 0)
 
     def total_amount(data):
-        result = 0
-        for perf in data["performances"]:
-            result += perf['amount']
-        return result
+        return reduce(lambda total, p: total + p['amount'], data['performances'], 0)
 
     statement_data = {}
     statement_data['customer'] = invoice['customer']
