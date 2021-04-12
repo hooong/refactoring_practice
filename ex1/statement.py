@@ -1,4 +1,8 @@
 def statement(invoice, plays):
+    return render_plain_text(invoice, plays)
+
+
+def render_plain_text(invoice, plays):
     def amount_for(a_performance):
         if play_for(a_performance)['type'] == 'tragedy':
             result = 40000
