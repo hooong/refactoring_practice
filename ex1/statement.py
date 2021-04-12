@@ -33,25 +33,27 @@ def statement(invoice, plays):
             result += a_performance["audience"] // 5
         return result
 
-    statement_data = {}
-    statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
-    return render_plain_text(statement_data)
-
-
-def render_plain_text(data):
-    def total_volume_credits():
+    def total_volume_credits(data):
         result = 0
         for perf in data["performances"]:
             result += perf['volumeCredits']
         return result
 
-    def total_amount():
+    def total_amount(data):
         result = 0
         for perf in data["performances"]:
             result += perf['amount']
         return result
 
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+    statement_data['totalAmount'] = total_amount(statement_data)
+    statement_data['totalVolumeCredits'] = total_volume_credits(statement_data)
+    return render_plain_text(statement_data)
+
+
+def render_plain_text(data):
     def usd(a_number):
         return f'{a_number/100:.2f}'
 
@@ -60,6 +62,6 @@ def render_plain_text(data):
     for perf in data["performances"]:
         result += f' {perf["play"]["name"]}: ${usd(perf["amount"])} ({perf["audience"]}석)\n'
 
-    result += f'총액: ${usd(total_amount())}\n'
-    result += f'적립 포인트: {total_volume_credits()}점'
+    result += f'총액: ${usd(data["totalAmount"])}\n'
+    result += f'적립 포인트: {data["totalVolumeCredits"]}점'
     return result
