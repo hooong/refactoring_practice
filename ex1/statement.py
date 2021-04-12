@@ -1,8 +1,10 @@
 def statement(invoice, plays):
-    return render_plain_text(invoice, plays)
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    return render_plain_text(statement_data, invoice, plays)
 
 
-def render_plain_text(invoice, plays):
+def render_plain_text(data, invoice, plays):
     def amount_for(a_performance):
         if play_for(a_performance)['type'] == 'tragedy':
             result = 40000
@@ -42,7 +44,7 @@ def render_plain_text(invoice, plays):
     def usd(a_number):
         return f'{a_number/100:.2f}'
 
-    result = f'청구 내역 (고객명: {invoice["customer"]})\n'
+    result = f'청구 내역 (고객명: {data["customer"]})\n'
 
     for perf in invoice["performances"]:
         result += f' {play_for(perf)["name"]}: ${usd(amount_for(perf))} ({perf["audience"]}석)\n'
