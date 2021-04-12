@@ -40,8 +40,6 @@ def statement(invoice, plays):
         result += f' {play_for(perf)["name"]}: ${usd(amount_for(perf))} ({perf["audience"]}석)\n'
         total_amount += amount_for(perf)
 
-    volume_credits = total_volume_credits()
-
     result += f'총액: ${usd(total_amount)}\n'
-    result += f'적립 포인트: {volume_credits}점'
+    result += f'적립 포인트: {total_volume_credits()}점'
     return result
