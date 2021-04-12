@@ -24,28 +24,25 @@ def statement(invoice, plays):
         return result
 
     def total_volume_credits():
-        volume_credits = 0
+        result = 0
         for perf in invoice["performances"]:
-            volume_credits += volume_credits_for(perf)
-        return volume_credits
+            result += volume_credits_for(perf)
+        return result
 
-    def apple_sauce():
-        total_amount = 0
+    def total_amount():
+        result = 0
         for perf in invoice["performances"]:
-            total_amount += amount_for(perf)
-        return total_amount
+            result += amount_for(perf)
+        return result
 
     def usd(a_number):
         return f'{a_number/100:.2f}'
 
-    total_amount = 0
     result = f'청구 내역 (고객명: {invoice["customer"]})\n'
 
     for perf in invoice["performances"]:
         result += f' {play_for(perf)["name"]}: ${usd(amount_for(perf))} ({perf["audience"]}석)\n'
 
-    total_amount += apple_sauce()
-
-    result += f'총액: ${usd(total_amount)}\n'
+    result += f'총액: ${usd(total_amount())}\n'
     result += f'적립 포인트: {total_volume_credits()}점'
     return result
