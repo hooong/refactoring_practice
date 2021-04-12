@@ -6,6 +6,7 @@ def statement(invoice, plays):
         result = copy.copy(a_performance)
         result['play'] = play_for(result)
         result['amount'] = amount_for(result)
+        result['volumeCredits'] = volume_credits_for(result)
         return result
 
     def play_for(a_performance):
@@ -25,13 +26,6 @@ def statement(invoice, plays):
             raise Exception(f'알 수 없는 장르 : {a_performance["play"]["type"]}')
         return result
 
-    statement_data = {}
-    statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
-    return render_plain_text(statement_data)
-
-
-def render_plain_text(data):
     def volume_credits_for(a_performance):
         result = 0
         result += max(a_performance["audience"] - 30, 0)
@@ -39,10 +33,17 @@ def render_plain_text(data):
             result += a_performance["audience"] // 5
         return result
 
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+    return render_plain_text(statement_data)
+
+
+def render_plain_text(data):
     def total_volume_credits():
         result = 0
         for perf in data["performances"]:
-            result += volume_credits_for(perf)
+            result += perf['volumeCredits']
         return result
 
     def total_amount():
