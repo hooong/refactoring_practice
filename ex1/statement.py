@@ -1,16 +1,16 @@
 def statement(invoice, plays):
-    def amount_for(a_performance, play):
-        if play['type'] == 'tragedy':
+    def amount_for(a_performance):
+        if play_for(a_performance)['type'] == 'tragedy':
             result = 40000
             if a_performance["audience"] > 30:
                 result += 1000 * (a_performance["audience"] - 30)
-        elif play['type'] == 'comedy':
+        elif play_for(a_performance)['type'] == 'comedy':
             result = 30000
             if a_performance["audience"] > 20:
                 result += 10000 + 500 * (a_performance["audience"] - 20)
             result += 300 * a_performance["audience"]
         else:
-            raise Exception(f'알 수 없는 장르 : {play["type"]}')
+            raise Exception(f'알 수 없는 장르 : {play_for(a_performance)["type"]}')
         return result
 
     def play_for(a_performance):
@@ -23,7 +23,7 @@ def statement(invoice, plays):
     for perf in invoice["performances"]:
         this_amount = 0
 
-        this_amount = amount_for(perf, play_for(perf))
+        this_amount = amount_for(perf)
 
         # 포인트 적립
         volume_credits += max(perf["audience"] - 30, 0)
