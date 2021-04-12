@@ -1,6 +1,7 @@
 def statement(invoice, plays):
     statement_data = {}
     statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = invoice['performances']
     return render_plain_text(statement_data, invoice, plays)
 
 
@@ -31,13 +32,13 @@ def render_plain_text(data, invoice, plays):
 
     def total_volume_credits():
         result = 0
-        for perf in invoice["performances"]:
+        for perf in data["performances"]:
             result += volume_credits_for(perf)
         return result
 
     def total_amount():
         result = 0
-        for perf in invoice["performances"]:
+        for perf in data["performances"]:
             result += amount_for(perf)
         return result
 
@@ -46,7 +47,7 @@ def render_plain_text(data, invoice, plays):
 
     result = f'청구 내역 (고객명: {data["customer"]})\n'
 
-    for perf in invoice["performances"]:
+    for perf in data["performances"]:
         result += f' {play_for(perf)["name"]}: ${usd(amount_for(perf))} ({perf["audience"]}석)\n'
 
     result += f'총액: ${usd(total_amount())}\n'
