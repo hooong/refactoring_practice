@@ -1,7 +1,14 @@
+import copy
+
+
 def statement(invoice, plays):
+    def enrich_performance(a_performance):
+        result = copy.copy(a_performance)
+        return result
+
     statement_data = {}
     statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = invoice['performances']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
     return render_plain_text(statement_data, invoice, plays)
 
 
