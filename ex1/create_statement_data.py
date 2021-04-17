@@ -11,9 +11,7 @@ class PerformanceCalculator:
 
     def amount(self):
         if self.play["type"] == 'tragedy':
-            result = 40000
-            if self.performance["audience"] > 30:
-                result += 1000 * (self.performance["audience"] - 30)
+            raise Exception('오류 발생')
         elif self.play['type'] == 'comedy':
             result = 30000
             if self.performance["audience"] > 20:
@@ -32,7 +30,11 @@ class PerformanceCalculator:
 
 
 class TragedyCalculator(PerformanceCalculator):
-    pass
+    def amount(self):
+        result = 40000
+        if self.performance["audience"] > 30:
+            result += 1000 * (self.performance["audience"] - 30)
+        return result
 
 
 class ComedyCalculator(PerformanceCalculator):
