@@ -6,6 +6,21 @@ class PerformanceCalculator:
     def __init__(self, a_performance, a_play):
         self.performance = a_performance
         self.play = a_play
+        self.amount = self.amount()
+
+    def amount(self):
+        if self.play["type"] == 'tragedy':
+            result = 40000
+            if self.performance["audience"] > 30:
+                result += 1000 * (self.performance["audience"] - 30)
+        elif self.play['type'] == 'comedy':
+            result = 30000
+            if self.performance["audience"] > 20:
+                result += 10000 + 500 * (self.performance["audience"] - 20)
+            result += 300 * self.performance["audience"]
+        else:
+            raise Exception(f'알 수 없는 장르 : {self.play["type"]}')
+        return result
 
 
 def create_statement_data(invoice, plays):
@@ -13,7 +28,7 @@ def create_statement_data(invoice, plays):
         calculator = PerformanceCalculator(a_performance, play_for(a_performance))
         result = copy.copy(a_performance)
         result['play'] = calculator.play
-        result['amount'] = amount_for(result)
+        result['amount'] = calculator.amount
         result['volumeCredits'] = volume_credits_for(result)
         return result
 
@@ -21,18 +36,7 @@ def create_statement_data(invoice, plays):
         return plays[a_performance["playID"]]
 
     def amount_for(a_performance):
-        if a_performance['play']['type'] == 'tragedy':
-            result = 40000
-            if a_performance["audience"] > 30:
-                result += 1000 * (a_performance["audience"] - 30)
-        elif a_performance['play']['type'] == 'comedy':
-            result = 30000
-            if a_performance["audience"] > 20:
-                result += 10000 + 500 * (a_performance["audience"] - 20)
-            result += 300 * a_performance["audience"]
-        else:
-            raise Exception(f'알 수 없는 장르 : {a_performance["play"]["type"]}')
-        return result
+        return PerformanceCalculator(a_performance, play_for(a_performance)).amount
 
     def volume_credits_for(a_performance):
         result = 0
