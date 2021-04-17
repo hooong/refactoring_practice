@@ -2,10 +2,17 @@ import copy
 from functools import reduce
 
 
+class PerformanceCalculator:
+    def __init__(self, a_performance, a_play):
+        self.performance = a_performance
+        self.play = a_play
+
+
 def create_statement_data(invoice, plays):
     def enrich_performance(a_performance):
+        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
         result = copy.copy(a_performance)
-        result['play'] = play_for(result)
+        result['play'] = calculator.play
         result['amount'] = amount_for(result)
         result['volumeCredits'] = volume_credits_for(result)
         return result
