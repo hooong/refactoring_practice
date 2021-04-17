@@ -7,12 +7,12 @@ class PerformanceCalculator:
         self._performance = a_performance
         self._play = a_play
         self._amount = self.calc_amount()
-        self.volume_credits = self.volume_credits()
+        self._volume_credits = self.calc_volume_credits()
 
     def calc_amount(self):
         raise Exception('서브클래스에서 처리하도록 설계 됨.')
 
-    def volume_credits(self):
+    def calc_volume_credits(self):
         return max(self._performance["audience"] - 30, 0)
 
     @property
@@ -26,6 +26,10 @@ class PerformanceCalculator:
     @property
     def amount(self):
         return self._amount
+
+    @property
+    def volume_credits(self):
+        return self._volume_credits
 
 
 class TragedyCalculator(PerformanceCalculator):
@@ -44,8 +48,8 @@ class ComedyCalculator(PerformanceCalculator):
         result += 300 * self.performance["audience"]
         return result
 
-    def volume_credits(self):
-        return super().volume_credits() + self.performance["audience"] // 5
+    def calc_volume_credits(self):
+        return super().calc_volume_credits() + self.performance["audience"] // 5
 
 
 def create_performance_calculator(a_performance, a_play):
