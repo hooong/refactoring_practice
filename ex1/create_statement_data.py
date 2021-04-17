@@ -7,6 +7,7 @@ class PerformanceCalculator:
         self.performance = a_performance
         self.play = a_play
         self.amount = self.amount()
+        self.volume_credits = self.volume_credits()
 
     def amount(self):
         if self.play["type"] == 'tragedy':
@@ -22,6 +23,13 @@ class PerformanceCalculator:
             raise Exception(f'알 수 없는 장르 : {self.play["type"]}')
         return result
 
+    def volume_credits(self):
+        result = 0
+        result += max(self.performance["audience"] - 30, 0)
+        if self.play['type'] == 'comedy':
+            result += self.performance["audience"] // 5
+        return result
+
 
 def create_statement_data(invoice, plays):
     def enrich_performance(a_performance):
@@ -29,21 +37,11 @@ def create_statement_data(invoice, plays):
         result = copy.copy(a_performance)
         result['play'] = calculator.play
         result['amount'] = calculator.amount
-        result['volumeCredits'] = volume_credits_for(result)
+        result['volumeCredits'] = calculator.volume_credits
         return result
 
     def play_for(a_performance):
         return plays[a_performance["playID"]]
-
-    def amount_for(a_performance):
-        return PerformanceCalculator(a_performance, play_for(a_performance)).amount
-
-    def volume_credits_for(a_performance):
-        result = 0
-        result += max(a_performance["audience"] - 30, 0)
-        if 'comedy' == a_performance['play']['type']:
-            result += a_performance["audience"] // 5
-        return result
 
     def total_volume_credits(data):
         return reduce(lambda total, p: total + p['volumeCredits'], data['performances'], 0)
