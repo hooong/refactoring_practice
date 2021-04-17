@@ -4,7 +4,7 @@ from functools import reduce
 
 class PerformanceCalculator:
     def __init__(self, a_performance, a_play):
-        self.performance = a_performance
+        self._performance = a_performance
         self.play = a_play
         self.amount = self.amount()
         self.volume_credits = self.volume_credits()
@@ -13,7 +13,11 @@ class PerformanceCalculator:
         raise Exception('서브클래스에서 처리하도록 설계 됨.')
 
     def volume_credits(self):
-        return max(self.performance["audience"] - 30, 0)
+        return max(self._performance["audience"] - 30, 0)
+
+    @property
+    def performance(self):
+        return self._performance
 
 
 class TragedyCalculator(PerformanceCalculator):
