@@ -5,7 +5,7 @@ from functools import reduce
 class PerformanceCalculator:
     def __init__(self, a_performance, a_play):
         self._performance = a_performance
-        self.play = a_play
+        self._play = a_play
         self.amount = self.amount()
         self.volume_credits = self.volume_credits()
 
@@ -18,6 +18,10 @@ class PerformanceCalculator:
     @property
     def performance(self):
         return self._performance
+
+    @property
+    def play(self):
+        return self._play
 
 
 class TragedyCalculator(PerformanceCalculator):
