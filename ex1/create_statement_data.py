@@ -31,8 +31,21 @@ class PerformanceCalculator:
         return result
 
 
+class TragedyCalculator(PerformanceCalculator):
+    pass
+
+
+class ComedyCalculator(PerformanceCalculator):
+    pass
+
+
 def create_performance_calculator(a_performance, a_play):
-    return PerformanceCalculator(a_performance, a_play)
+    if a_play['type'] == 'tragedy':
+        return TragedyCalculator(a_performance, a_play)
+    elif a_play['type'] == 'comedy':
+        return ComedyCalculator(a_performance, a_play)
+    else:
+        raise Exception(f'알 수 없는 장르 : {a_play["type"]}')        
 
 
 def create_statement_data(invoice, plays):
